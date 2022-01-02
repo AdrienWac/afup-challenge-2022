@@ -1,0 +1,24 @@
+{
+    "name": "adrien/challenge-2022-01",
+    "description": "AFUP challenge janv 2022",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Adrien Lbt",
+            "email": "adrienlambert725@msn.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Battleship\\": "battleship/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Battleship\\Tests\\": "tests/"
+        }
+    }
+}
