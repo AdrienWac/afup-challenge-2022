@@ -3,7 +3,13 @@ declare(strict_types=1);
 
 require "vendor/autoload.php";
 
-use \Battleship\Main;
+// TODO Gestion du placement des bateaux
+// TODO Init plateau avec distributions de probabilités
+// TODO Gestion du tir
+    // Ajout des coordonnées du tir dans la memoïzation
+    // Update plateau avec distributions de probabiltés
+// TODO Gestion de réception du tir
+
 
 $count = 5;
 while (true) {
