@@ -5,7 +5,7 @@ namespace Battleship;
 require "vendor/autoload.php";
 
 use Battleship\GameBoard;
-use Battleship\Boat;
+use Battleship\Ship;
 
 class Game
 {
@@ -16,11 +16,11 @@ class Game
     function __construct(array $sizeBoard)
     {
         $this->myGameBoard = new GameBoard($sizeBoard, 0);
-        $this->myShips['AircraftCarrier'] = new Boat('AircraftCarrier', 5, 1);
-        $this->myShips['Cruiser'] = new Boat('Cruiser', 4, 2);
-        $this->myShips['Destroyer1'] = new Boat('Destroyer1', 3, 3);
-        $this->myShips['Destroyer2'] = new Boat('Destroyer2', 3, 4);
-        $this->myShips['TorpedoBoat'] = new Boat('Torpedo Boat', 2, 5);
+        $this->myShips['AircraftCarrier'] = new Ship('AircraftCarrier', 5, 1);
+        $this->myShips['Cruiser'] = new Ship('Cruiser', 4, 2);
+        $this->myShips['Destroyer1'] = new Ship('Destroyer1', 3, 3);
+        $this->myShips['Destroyer2'] = new Ship('Destroyer2', 3, 4);
+        $this->myShips['TorpedoBoat'] = new Ship('Torpedo Boat', 2, 5);
     }
 
     public function placeShipOnGameBoard()
