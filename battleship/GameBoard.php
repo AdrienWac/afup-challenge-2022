@@ -19,4 +19,22 @@ class GameBoard {
         return $this->board;
     }
 
+    public function setBoard(array $coordinates, string $value) {
+        [$x, $y] = $coordinates;
+        $this->board[$y][$x] = $value;
+    }
+
+    public function draw()
+    {
+
+        $result = [];
+
+        array_map(function ($array) use (&$result) {
+            $result[] = implode('', $array);
+        }, $this->board);
+
+        print_r($result);
+
+    } 
+
 }

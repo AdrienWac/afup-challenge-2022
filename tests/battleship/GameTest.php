@@ -29,6 +29,11 @@ class GameTest extends TestCase {
 
     }
 
+    /**
+     * Test all ships should be placed into the board
+     *
+     * @return void
+     */
     public function testPlaceShipsOnGameBoard() {
         
         $game = new Game([10, 10]);
@@ -37,24 +42,24 @@ class GameTest extends TestCase {
 
         $myGameBoard = $game->myGameBoard;
         
-        // TODO compter le nombre de X dans le board
-        $this->assertEquals(
-            [
-                [null, 'X', 'X', 'X', 'X', 'X', null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null, null, null]
-            ],
-            $myGameBoard->getBoard()
-        );
-    
+        $countCaseOfShip = array_sum(
 
+            array_map(function($array) {
+
+                $countValueOfArray = array_count_values($array);
+
+                if (array_key_exists('X', $countValueOfArray)) {
+                    return $countValueOfArray['X'];
+                }
+
+                return 0;
+
+            }, $myGameBoard->getBoard())
+
+        );
+
+        $this->assertEquals($countCaseOfShip, 17);
+        
     }
 
 }
