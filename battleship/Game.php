@@ -48,10 +48,6 @@ class Game
         $this->myGameBoard->setBoard([1, 6], 'X');
         $this->myGameBoard->setBoard([1, 7], 'X');
 
-        // Pour chaque bateau
-            // Si premier bateau 
-                // Get random position on board
-
     }
 
     
