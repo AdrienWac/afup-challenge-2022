@@ -148,9 +148,17 @@ class GameBoard {
      */
     public function findRandomAvailableCellCoordinates(Ship $ship, array &$arrayCellsVisited): array {
 
-        $result = [1,2];
+        $result = [];
 
-        $arrayCellsVisited[] = [1,2];
+        [$numberMaxRowInBoard, $numberMaxColInBoard] = $this->size;
+
+        // Je cherche un point compris entre 0 taille du board - 1 
+        // et qui n'est pas dans les points déjà visités ou occupés
+        do {
+            $result = [rand(0, $numberMaxRowInBoard - 1), rand(0, $numberMaxColInBoard - 1)];
+        } while(in_array($result, $arrayCellsVisited));
+
+        $arrayCellsVisited[] = $result;
 
         return $result;
 
@@ -159,7 +167,7 @@ class GameBoard {
     /**
      * Parcours le board pour retourner le tableau des coordonées des cases occupées
      *
-     * @return array
+     * @return array Tableau des coordonées des cases occupées
      */
     public function getOccupiedCells(): array {
 
