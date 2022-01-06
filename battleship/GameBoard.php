@@ -71,6 +71,24 @@ class GameBoard {
         $arrayOccupiedCells = $this->getOccupiedCells();
         
         // Pour chaque bateau
+        foreach ($ships as $keyShip => $ship) {
+
+            // J'initialise un tableau vide des points visités avec les points des cellules déjà occupés
+            $arrayCellsVisited = $arrayOccupiedCells;
+
+            // Tant que tout les points libres ne sont pas visités ou que je n'ai pas trouvé tout les points du bateau 
+            // (compare attribut size et taille attribut position du bateau courant)
+            while(count($arrayCellsVisited) !== ($this->size[0]*$this->size[1]) || $ship->size !== count($ship->coordinates)) {
+
+                $randomAvailableCellCoordinates = $this->findRandomAvailableCellCoordinates($ship, $arrayCellsVisited);
+
+
+
+            }
+
+
+
+        }
             
             // J''initialise un tableau vide des points visités
             
@@ -119,6 +137,23 @@ class GameBoard {
                 
             // Fin while
             
+    }
+
+    /**
+     * Retourne les coordonnées d'une cellule libre prise au hasard et non visité
+     *
+     * @param Ship $ship
+     * @param array $arrayCellsVisited
+     * @return array
+     */
+    public function findRandomAvailableCellCoordinates(Ship $ship, array &$arrayCellsVisited): array {
+
+        $result = [1,2];
+
+        $arrayCellsVisited[] = [1,2];
+
+        return $result;
+
     }
 
     /**
