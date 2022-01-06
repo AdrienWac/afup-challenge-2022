@@ -11,6 +11,8 @@ class Constants {
 
     const HORIZONTAL_ORENTATION_SHIP = 'horizontal';
     const VERTICAL_ORENTATION_SHIP = 'vertical';
+
+    const VALUE_EMPTY_CELL = 0;
     
 
     public static function getStateAliveShip() {
@@ -23,6 +25,10 @@ class Constants {
 
     public static function getVerticalOrientationShip() {
         return self::VERTICAL_ORENTATION_SHIP;
+    }
+
+    public static function getValueEmptyCell() {
+        return self::VALUE_EMPTY_CELL;
     }
 
 }

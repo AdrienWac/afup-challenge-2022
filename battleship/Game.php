@@ -15,7 +15,7 @@ class Game
 
     function __construct(array $sizeBoard)
     {
-        $this->myGameBoard = new GameBoard($sizeBoard, 0);
+        $this->myGameBoard = new GameBoard($sizeBoard);
         $this->myShips['AircraftCarrier'] = new Ship('AircraftCarrier', 5, 1);
         $this->myShips['Cruiser'] = new Ship('Cruiser', 4, 2);
         $this->myShips['Destroyer1'] = new Ship('Destroyer1', 3, 3);

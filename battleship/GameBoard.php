@@ -4,17 +4,20 @@ namespace Battleship;
 
 require "vendor/autoload.php";
 
+use Battleship\Constants;
+
 class GameBoard {
 
     private array $size;
     private array $board;
     private array $ships;
 
-    function __construct(array $size, mixed $value)
-    {
+    function __construct(array $size)
+    {   
+        $value = 
         $this->size = $size;
         [$numberMaxRow, $numberMaxCol] = $size;
-        $this->board = array_fill(0, $numberMaxRow, array_fill(0, $numberMaxCol, $value));
+        $this->board = array_fill(0, $numberMaxRow, array_fill(0, $numberMaxCol, Constants::getValueEmptyCell()));
     }
 
     /**
@@ -65,6 +68,7 @@ class GameBoard {
     public function placeShipsOnBoard(array $ships) {
 
         // On récupère le tableau des cellules déjà occupés
+        $arrayOccupiedCells = $this->getOccupiedCells();
         
         // Pour chaque bateau
             
@@ -118,12 +122,37 @@ class GameBoard {
     }
 
     /**
-     * Undocumented function
+     * Parcours le board pour retourner le tableau des coordonées des cases occupées
      *
      * @return array
      */
-    private function getOccupiedCells(): array {
-        return [];
+    public function getOccupiedCells(): array {
+
+        $result = [];
+
+        $valueEmptyCell = Constants::getValueEmptyCell();
+
+        foreach ($this->board as $keyRow => $columns) {
+
+            $countValueInRow = array_count_values($columns);
+
+            if ($countValueInRow[$valueEmptyCell] === $this->size[1]) {
+                continue;
+            }
+
+            foreach ($columns as $keyColumn => $value) {
+                
+                if ($value === $valueEmptyCell) {
+                    continue;
+                }
+
+                $result[] = [$keyRow, $keyColumn];
+
+            }
+
+        }
+
+        return $result;
     }
 
     /**
