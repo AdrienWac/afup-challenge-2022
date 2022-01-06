@@ -13,8 +13,8 @@ class GameBoard {
     function __construct(array $size, mixed $value)
     {
         $this->size = $size;
-        [$maxX, $maxY] = $size;
-        $this->board = array_fill(0, $maxY, array_fill(0, $maxX, $value));
+        [$numberMaxRow, $numberMaxCol] = $size;
+        $this->board = array_fill(0, $numberMaxRow, array_fill(0, $numberMaxCol, $value));
     }
 
     /**
@@ -34,8 +34,8 @@ class GameBoard {
      * @return void
      */
     public function setBoard(array $coordinates, string $value) {
-        [$x, $y] = $coordinates;
-        $this->board[$y][$x] = $value;
+        [$rowNumber, $colNumber] = $coordinates;
+        $this->board[$rowNumber][$colNumber] = $value;
     }
 
     /**
@@ -64,69 +64,66 @@ class GameBoard {
      */
     public function placeShipsOnBoard(array $ships) {
 
-        $this->ships = $ships;
+        // On récupère le tableau des cellules déjà occupés
+        
+        // Pour chaque bateau
+            
+            // J''initialise un tableau vide des points visités
+            
+            // Tant que tout les points libres ne sont pas visités ou que je n'ai pas trouvé tout les points du bateau (compare attribut size et taille attribut position du bateau courant)
 
-        foreach ($this->ships as $keyShip => $ship) {
-            $this->placeOneShipOnBoard($ship);
-        }
+                // Je cherche un point au hasard
+                    // Je cherche un point compris entre 0 taille du board - 1 
+                    // et qui n'est pas la tableau des cellules déjà occupées 
+                    // et qui n'est pas dans les points déjà visités
+                    // J'ajoute ce point au tableau des points visités
+                    // Je retourne le point
 
+                // Calculer les points pour chaque orientation et direction à partir du point de départ trouvé au hasard
+                    // Pour chaque orientation
+                        // Pour chaque direction
+                            // J'initialise un tableau de point vide
+                            // Pour chaque case de la taille du bateau
+                                // Je calcul le point
+                                // J'ajoute ce point au tableau des points visités (à passer en référence)
+                                // Si le point n'est pas dans le board
+                                    // Je passe à la direction suivante
+                                // Fin si
+                                // Si le point n'est pas libre
+                                    // Je passe à la direction suivante
+                                // Fin si
+                                // Je stocke le point
+                            // Fin pour
+                            // Je retourne tout mes points stockés ça sera la position de mon tableau
+                        // Fin pour
+                    // Fin pour 
+                    // Je retourne un tableau vide
+                // Fin fonction
+
+                // Si point calculer vide 
+                    // Continue la boucle while, je repars au début chercher un point au hasard
+                // Fin si
+                
+                // Pour chaque point 
+                    // Je dépose le bateau sur le board
+                        // Je met à jour le board avec l'id du bateau dans la case
+                    // Fin
+                    // J'ajoute le point au tableau des cellules déjà occupés
+                // Fin pour
+
+                // Je mets à jour l'attribut position du bateau avec le tableau des points
+                
+            // Fin while
+            
     }
 
-
-
     /**
-     * Place one boat on game board
+     * Undocumented function
      *
-     * @param \Battleship\Ship $ship Ship to place
-     * @return void
+     * @return array
      */
-    private function placeOneShipOnBoard(\Battleship\Ship $ship) {
-
-        // Récupère la taille du board
-        [$sizeX, $sizeY] = $this->size;
-
-        // Tableau des directions
-        $arrayPotentialsDirections = [\Battleship\Constants::getVerticalOrientationShip(), \Battleship\Constants::getHorizontalOrientationShip()];
-
-        // Random direction
-        $direction = $arrayPotentialsDirections[rand(0, 1)];
-
-        // On cherche un point de départ aléatoire dans le board
-        if ($direction == \Battleship\Constants::getVerticalOrientationShip()) {
-
-            $referenceSize = $sizeY;
-            $randomCoordinates = [rand(0, $sizeX - 1), rand(0, ($referenceSize - $ship->size) - 1)];
-
-        } else {
-
-            $referenceSize = $sizeX;
-            $randomCoordinates = [rand(0, ($referenceSize - $ship->size) - 1), rand(0, $sizeY - 1)];
-
-        }
-
-        // On test si tout le bateau passe
-        // Cell est dispo si toutes les cases de la taille du bateau sont libre et dans le board 
-        for ($i=0; $i < $ship->size; $i++) {
-
-            // On calcul les nouvelles coordonnées en fonction de la direction
-            $currentCoordinates = $direction == \Battleship\Constants::getVerticalOrientationShip() ? [$randomCoordinates[0], $randomCoordinates[1] + $i]  : [$randomCoordinates[0] + $i, $randomCoordinates[1]]; 
-            
-            // Si la cellule courante n'est pas dispo, on recommence à zéro
-            if (!$this->isAvailableCell($currentCoordinates)) {
-                $this->placeOneShipOnBoard($ship);
-            }
-
-            // Si la cellule n'est pas dans le board, on recommence à zéro
-            if (!$this->isInTheBoard($currentCoordinates)) {
-                $this->placeOneShipOnBoard($ship);
-            }
-
-            // Sinon on place le bateau
-            $this->setBoard($currentCoordinates, $ship->name);
-
-        }
-
-
+    private function getOccupiedCells(): array {
+        return [];
     }
 
     /**
@@ -137,9 +134,9 @@ class GameBoard {
      */
     public function isAvailableCell(array $coordinates) {
 
-        [$x, $y] = $coordinates;
+        [$rowNumber, $colNumber] = $coordinates;
 
-        return !in_array($this->board[$y][$x], array_keys($this->ships));
+        return !in_array($this->board[$rowNumber][$colNumber], array_keys($this->ships));
 
     }
 
