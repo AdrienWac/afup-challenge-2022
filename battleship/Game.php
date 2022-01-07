@@ -21,29 +21,7 @@ class Game
 
     public function placeShipOnGameBoard()
     {
-        $this->myGameBoard->setBoard([0,0], 'X');
-        $this->myGameBoard->setBoard([0,1], 'X');
-        $this->myGameBoard->setBoard([0,2], 'X');
-        $this->myGameBoard->setBoard([0,3], 'X');
-        $this->myGameBoard->setBoard([0,4], 'X');
-
-
-        $this->myGameBoard->setBoard([0, 5], 'X');
-        $this->myGameBoard->setBoard([0, 6], 'X');
-        $this->myGameBoard->setBoard([0, 7], 'X');
-        $this->myGameBoard->setBoard([0, 8], 'X');
-
-        $this->myGameBoard->setBoard([1, 0], 'X');
-        $this->myGameBoard->setBoard([1, 1], 'X');
-        $this->myGameBoard->setBoard([1, 2], 'X');
-
-        $this->myGameBoard->setBoard([1, 3], 'X');
-        $this->myGameBoard->setBoard([1, 4], 'X');
-        $this->myGameBoard->setBoard([1, 5], 'X');
-
-        $this->myGameBoard->setBoard([1, 6], 'X');
-        $this->myGameBoard->setBoard([1, 7], 'X');
-
+        $this->myGameBoard->placeShipsOnBoard($this->myShips);
     }
 
     /**
@@ -60,11 +38,62 @@ class Game
             'Destroyer2' => new Ship('Destroyer2', 3, 4),
             'TorpedoBoat' => new Ship('Torpedo Boat', 2, 5),
         ];
-
     }
 
     public function getBoard()
     {
-        return $this->board;
+        return $this->myGameBoard;
     }
+
+    /**
+     * Tir sur le board ennemi
+     *
+     * @return void
+     */
+    public function shoot(): void
+    {
+        echo chr(mt_rand(65, 74)), mt_rand(1, 10), "\n";
+    }
+
+    /**
+     * Traiter le tir ennemi
+     *
+     * @param string $coordinates Coordonnées du tir ennemi au format ([A-J][1-10])
+     * @return void
+     */
+    public function handlingEnemyFire(string $coordinates): string
+    {
+        [$rowNumber, $colNumber] = $this->translateCoordinates($coordinates);
+        // Translate coordinates
+        $board = $this->myGameBoard->getBoard();
+
+        if ($board[$rowNumber][$colNumber] === Constants::getValueEmptyCell()) {
+            return "miss\n";
+        }
+
+        // Récupérer le ship par la valeur de la case et $this->myShips
+
+        // Retirer la coordonnée de $this->myShips[value cell]->positions
+
+        // Si le $this->myShips[value cell]->positions est vide 
+            // return "sunk\n"; 
+
+        // Modifier la valeur de la cell du board par Constants::getValueEmptyCell()
+
+        return "hit\n";
+    }
+
+    /**
+     * Traduit les coordonnées du type [A-J][1-10] en [[0-9]Row, [0-9]Col]
+     *
+     * @param string $coordinatesFromScript  Coordonnées au format [A-J][1-10]
+     * @return array Coordonnées au format [[0-9]Row, [0-9]Col]
+     */
+    private function translateCoordinates(string $coordinatesFromScript): array
+    {
+        $result = [];
+
+        return $result;
+    }
+
 }

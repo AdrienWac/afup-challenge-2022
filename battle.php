@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require "vendor/autoload.php";
 
+use Battleship\Game;
 // TODO Gestion du placement des bateaux
 // TODO Init plateau avec distributions de probabilités
 // TODO Gestion du tir
@@ -10,6 +11,7 @@ require "vendor/autoload.php";
     // Update plateau avec distributions de probabiltés
 // TODO Gestion de réception du tir
 
+$game = new Game([10,10]);
 
 $count = 5;
 while (true) {
@@ -22,8 +24,9 @@ while (true) {
     
     // Tirer
     if ($command === 'your turn') {
-        echo chr(mt_rand(65, 74)), mt_rand(1,10), "\n";
+        $game->shoot();
     } elseif (preg_match('`^([A-J](?:[1-9]|10))$`i', $command)) { // Recevoir un coup
+
         // Si dernier bateau coulé, l'adversaire gagne
         if ($count-- === 0) {
             echo "won\n";
