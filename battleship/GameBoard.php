@@ -78,16 +78,33 @@ class GameBoard {
 
             // Tant que tout les points libres ne sont pas visités ou que je n'ai pas trouvé tout les points du bateau 
             // (compare attribut size et taille attribut position du bateau courant)
-            while(count($arrayCellsVisited) !== ($this->size[0]*$this->size[1]) || $ship->size !== count($ship->coordinates)) {
+            $arrayShipPositions = [];
+            while(count($arrayCellsVisited) !== ($this->size[0]*$this->size[1])) {
 
                 $randomAvailableCellCoordinates = $this->findRandomAvailableCellCoordinates($ship, $arrayCellsVisited);
 
-                $arrayShipPositions = $this->placeOneShipOnBoard($ship, $randomAvailableCellCoordinates, $arrayCellsVisited);
-
+                $arrayShipPositions = $this->tryPlaceShipFromPoint($ship, $randomAvailableCellCoordinates, $arrayCellsVisited);
+                
+                if ($ship->size === count($arrayShipPositions)) {
+                    break;
+                }
 
             }
 
+            if ($ship->size !== count($arrayShipPositions)) {
+                throw new \Exception(`Impossible de placer le bateau {$ship->name}`);
+            }
 
+            foreach ($arrayShipPositions as $coordinates) {
+
+                $this->setBoard($coordinates, $ship->name);
+                
+            }
+            
+            $arrayOccupiedCells = [...$arrayOccupiedCells, ...$arrayShipPositions];
+
+            $ship->coordinates = $arrayShipPositions;
+            
 
         }
             
@@ -208,26 +225,85 @@ class GameBoard {
      * @param array $arrayCellsVisited
      * @return array Tableau vide si pas possible de placer le bateau, sinon tableau des coordonées de la position du bateau
      */
-    public function placeOneShipOnBoard(Ship $ship, array $coordinatesOfReferenceCell, array &$arrayCellsVisited): array {
+    public function tryPlaceShipFromPoint(Ship $ship, array $coordinatesOfReferenceCell, array &$arrayCellsVisited): array {
 
         $result = [];
+        
+        [$horizontalOrientation, $verticalOrientation] = [Constants::getHorizontalOrientationShip(), Constants::getVerticalOrientationShip()];
 
+        $directionsByOrientation = [$horizontalOrientation => ['up', 'down'], $verticalOrientation => ['left', 'right']];
+
+        foreach ([$horizontalOrientation, $verticalOrientation] as $orientation) {
+            
+            foreach ($directionsByOrientation[$orientation] as $direction) {
+
+                for ($i=0; $i < $ship->size; $i++) { 
+
+                    switch ($direction) {
+
+                        case 'up':
+                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0] - $i, $coordinatesOfReferenceCell[1]];
+                            break;
+
+                        case 'down':
+                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0] + $i, $coordinatesOfReferenceCell[1]];
+                            break;
+
+                        case 'left':
+                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0], $coordinatesOfReferenceCell[1] - $i];
+                            break;
+
+                        case 'right':
+                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0], $coordinatesOfReferenceCell[1] + $i];
+                            break;
+                        
+                        default:
+                            $currentCellCoordinates = $coordinatesOfReferenceCell;
+                            break;
+
+                    }
+
+                    // TODO J'ajoute ce point au tableau des points visités (à passer en référence) EST-CE VRAIMENT NECESSAIRE
+                    
+                    if (!$this->isInTheBoard($currentCellCoordinates)) {
+                        continue;
+                    }
+
+                    if (!$this->isAvailableCell($currentCellCoordinates)) {
+                        continue;
+                    }
+
+                    $result[] = $currentCellCoordinates;
+
+                }
+
+                // Si le bateau passe en entier dans cette direction, on s'arrête là
+                if (count($result) === $ship->size) {
+                    return $result;
+                }
+
+                // Sinon on vide les potentiels points enregistrés, et on passe à la direction suivante
+                $result = [];
+
+            }
+
+        }
 
         return $result;
 
     }
 
     /**
-     * Test if cell is available for place a ship.
+     * Test si une case est libre ou non
      *
      * @param array $coordinates Coordinates table
      * @return boolean Is available or not
      */
-    public function isAvailableCell(array $coordinates) {
+    public function isAvailableCell(array $coordinates): bool {
 
         [$rowNumber, $colNumber] = $coordinates;
 
-        return !in_array($this->board[$rowNumber][$colNumber], array_keys($this->ships));
+        return $this->board[$rowNumber][$colNumber] === Constants::getValueEmptyCell();
 
     }
 
