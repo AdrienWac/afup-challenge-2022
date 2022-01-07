@@ -79,6 +79,26 @@ class GameBoardTest extends TestCase {
 
     // }
 
+    public function testPlaceOneShipOnBoard() {
+
+        $gameBoard = new GameBoard([3,3]);
+
+        $arrayCellOcupped = [[0, 0], [0, 1], [0, 2], [1, 0], [2,0], [2,1], [2,2]];
+
+        foreach ($arrayCellOcupped as $coordinates) {
+            $gameBoard->setBoard($coordinates, 'test');
+        }
+
+        $ship = new Ship('test', 2, 1);
+
+        $arrayCellVisited = $arrayCellOcupped;
+
+        $exceptedResult = $gameBoard->placeOneShipOnBoard($ship, [1,1], $arrayCellVisited);
+
+        $this->assertEquals($exceptedResult, [[1,1], [1,2]]);
+
+    }
+
     
 
 }

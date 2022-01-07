@@ -82,6 +82,7 @@ class GameBoard {
 
                 $randomAvailableCellCoordinates = $this->findRandomAvailableCellCoordinates($ship, $arrayCellsVisited);
 
+                $arrayShipPositions = $this->placeOneShipOnBoard($ship, $randomAvailableCellCoordinates, $arrayCellsVisited);
 
 
             }
@@ -196,6 +197,24 @@ class GameBoard {
         }
 
         return $result;
+    }
+
+    /**
+     * Placement d'un bateau à partir d'un point libre. 
+     * Test dans les 2 orientations et dans les 2 directions à chaque fois.
+     *
+     * @param Ship $ship
+     * @param array $coordinatesOfReferenceCell
+     * @param array $arrayCellsVisited
+     * @return array Tableau vide si pas possible de placer le bateau, sinon tableau des coordonées de la position du bateau
+     */
+    public function placeOneShipOnBoard(Ship $ship, array $coordinatesOfReferenceCell, array &$arrayCellsVisited): array {
+
+        $result = [];
+
+
+        return $result;
+
     }
 
     /**
