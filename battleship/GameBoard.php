@@ -67,11 +67,9 @@ class GameBoard {
      */
     public function placeShipsOnBoard(array $ships) {
 
-        // On récupère le tableau des cellules déjà occupés
         $arrayOccupiedCells = $this->getOccupiedCells();
         
-        // Pour chaque bateau
-        foreach ($ships as $keyShip => $ship) {
+        foreach ($ships as $ship) {
 
             // J'initialise un tableau vide des points visités avec les points des cellules déjà occupés
             $arrayCellsVisited = $arrayOccupiedCells;
@@ -183,6 +181,7 @@ class GameBoard {
         
         [$horizontalOrientation, $verticalOrientation] = [Constants::getHorizontalOrientationShip(), Constants::getVerticalOrientationShip()];
 
+        // TODO passer les valeurs des directions en constant
         $directionsByOrientation = [$horizontalOrientation => ['up', 'down'], $verticalOrientation => ['left', 'right']];
 
         foreach ([$horizontalOrientation, $verticalOrientation] as $orientation) {
@@ -216,7 +215,6 @@ class GameBoard {
                     }
 
                     // TODO J'ajoute ce point au tableau des points visités (à passer en référence) EST-CE VRAIMENT NECESSAIRE
-                    
                     if (!$this->isInTheBoard($currentCellCoordinates)) {
                         continue;
                     }
