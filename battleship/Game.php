@@ -16,11 +16,7 @@ class Game
     function __construct(array $sizeBoard)
     {
         $this->myGameBoard = new GameBoard($sizeBoard);
-        $this->myShips['AircraftCarrier'] = new Ship('AircraftCarrier', 5, 1);
-        $this->myShips['Cruiser'] = new Ship('Cruiser', 4, 2);
-        $this->myShips['Destroyer1'] = new Ship('Destroyer1', 3, 3);
-        $this->myShips['Destroyer2'] = new Ship('Destroyer2', 3, 4);
-        $this->myShips['TorpedoBoat'] = new Ship('Torpedo Boat', 2, 5);
+        $this->myShips = self::generateShips();
     }
 
     public function placeShipOnGameBoard()
@@ -50,8 +46,22 @@ class Game
 
     }
 
-    
+    /**
+     * Génère une flotte de bateau pour jouer
+     *
+     * @return array Tableau des bateaux
+     */
+    public static function generateShips(): array
+    {
+        return [
+            'AircraftCarrier' => new Ship('AircraftCarrier', 5, 1),
+            'Cruiser' => new Ship('Cruiser', 4, 2),
+            'Destroyer1' => new Ship('Destroyer1', 3, 3),
+            'Destroyer2' => new Ship('Destroyer2', 3, 4),
+            'TorpedoBoat' => new Ship('Torpedo Boat', 2, 5),
+        ];
 
+    }
 
     public function getBoard()
     {

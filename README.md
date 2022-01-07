@@ -77,3 +77,52 @@ Sur votre grille (virtuelle, jamais affichée) de 10 cases par 10 cases (colonne
 Les bateaux peuvent être positionnés horizontalement ou verticalement, mais jamais adjacents (même pas adjacent par la diagonale).
 
 Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le tir ne rejoue pas (certaines règles le proposent).
+
+
+## Algo de placement des bateaux
+// J''initialise un tableau vide des points visités
+            
+            // Tant que tout les points libres ne sont pas visités ou que je n'ai pas trouvé tout les points du bateau (compare attribut size et taille attribut position du bateau courant)
+
+                // Je cherche un point au hasard
+                    // Je cherche un point compris entre 0 taille du board - 1 
+                    // et qui n'est pas la tableau des cellules déjà occupées 
+                    // et qui n'est pas dans les points déjà visités
+                    // J'ajoute ce point au tableau des points visités
+                    // Je retourne le point
+
+                // Calculer les points pour chaque orientation et direction à partir du point de départ trouvé au hasard
+                    // Pour chaque orientation
+                        // Pour chaque direction
+                            // J'initialise un tableau de point vide
+                            // Pour chaque case de la taille du bateau
+                                // Je calcul le point
+                                // J'ajoute ce point au tableau des points visités (à passer en référence)
+                                // Si le point n'est pas dans le board
+                                    // Je passe à la direction suivante
+                                // Fin si
+                                // Si le point n'est pas libre
+                                    // Je passe à la direction suivante
+                                // Fin si
+                                // Je stocke le point
+                            // Fin pour
+                            // Je retourne tout mes points stockés ça sera la position de mon tableau
+                        // Fin pour
+                    // Fin pour 
+                    // Je retourne un tableau vide
+                // Fin fonction
+
+                // Si point calculer vide 
+                    // Continue la boucle while, je repars au début chercher un point au hasard
+                // Fin si
+                
+                // Pour chaque point 
+                    // Je dépose le bateau sur le board
+                        // Je met à jour le board avec l'id du bateau dans la case
+                    // Fin
+                    // J'ajoute le point au tableau des cellules déjà occupés
+                // Fin pour
+
+                // Je mets à jour l'attribut position du bateau avec le tableau des points
+                
+            // Fin while

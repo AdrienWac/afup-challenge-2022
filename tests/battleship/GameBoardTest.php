@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Battleship\GameBoard;
 use Battleship\Ship;
+use Battleship\Game;
 
 class GameBoardTest extends TestCase {
 
@@ -96,6 +97,40 @@ class GameBoardTest extends TestCase {
         $exceptedResult = $gameBoard->tryPlaceShipFromPoint($ship, [1,1], $arrayCellVisited);
 
         $this->assertEquals($exceptedResult, [[1,1], [1,2]]);
+
+    }
+    
+    public function testPlaceShipsOnBoard() 
+    {
+
+        for ($i=0; $i < 250; $i++) {
+
+            $arrayShips = Game::generateShips();
+
+            $exceptedResult = array_combine(array_column($arrayShips, 'identifiant'), array_column($arrayShips, 'size'));
+
+            $gameBoard = new GameBoard([10, 10]);
+
+            
+
+            $gameBoard->placeShipsOnBoard($arrayShips);
+
+            $sumFinal = array_fill_keys(array_keys($exceptedResult), 0);
+
+            foreach ($board = $gameBoard->getBoard() as $row) {
+
+                foreach ($row as $value) {
+
+                    if (array_key_exists($value, $sumFinal)) {
+                        $sumFinal[$value]++;
+                    }
+                }
+
+            }
+
+            $this->assertEquals($exceptedResult, $sumFinal);
+
+        }
 
     }
 
