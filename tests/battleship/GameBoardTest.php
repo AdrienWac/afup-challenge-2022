@@ -42,14 +42,17 @@ class GameBoardTest extends TestCase {
 
         $arrayCellVisited = [[1,1]];
 
-        $gameBoard->setBoard([0, 0], 'test');
-        $gameBoard->setBoard([0, 1], 'test');
-        $gameBoard->setBoard([0, 2], 'test');
-        $gameBoard->setBoard([1, 0], 'test');
+        $arrayCellOcupped = [[0, 0], [0, 1], [0, 2], [1, 0]];
 
-        $result = $gameBoard->findRandomAvailableCellCoordinates($ship, $arrayCellVisited);
+        foreach ($arrayCellOcupped as $coordinates) {
+            $gameBoard->setBoard($coordinates, 'test');
+        }
 
-        $this->assertEquals($result, [1,2] );
+        $arrayCellVisitedAndOccuped = [...$arrayCellVisited, ...$arrayCellOcupped];
+
+        $result = $gameBoard->findRandomAvailableCellCoordinates($ship, $arrayCellVisitedAndOccuped);
+
+        $this->assertEquals($result, [1,2]);
 
     }
 
@@ -59,7 +62,7 @@ class GameBoardTest extends TestCase {
 
         $ship = new Ship('test', 1, 1);
 
-        $arrayCellVisited = [[1,1]];
+        $arrayCellVisited = [[1,1], [0, 0], [0, 1], [0, 2], [1, 0]];
 
         $gameBoard->setBoard([0, 0], 'test');
         $gameBoard->setBoard([0, 1], 'test');
@@ -68,7 +71,7 @@ class GameBoardTest extends TestCase {
 
         $gameBoard->findRandomAvailableCellCoordinates($ship, $arrayCellVisited);
 
-        $this->assertEquals($arrayCellVisited, [[1,1], [1,2]]);
+        $this->assertEquals($arrayCellVisited, [[1, 1], [0, 0], [0, 1], [0, 2], [1, 0], [1,2]]);
 
     }
 
