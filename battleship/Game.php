@@ -94,9 +94,26 @@ class Game
      */
     public static function translateCoordinatesToArray(string $coordinatesFromScript): array
     {
-        $result = [9,3];
 
-        return $result;
+        $rangeLetter = range('A', 'J');
+
+        $extractLetterColumn = preg_split('/([1-9]|10)$/', $coordinatesFromScript, -1, PREG_SPLIT_NO_EMPTY);
+        $extractNumberRow = preg_split('/^([A-J])/', $coordinatesFromScript, -1, PREG_SPLIT_NO_EMPTY);
+
+        if ($extractLetterColumn === false || $extractNumberRow === false) {
+            throw new \Exception(`Impossible de lire la coordonnée {$coordinatesFromScript}`);
+        }
+
+        $numberCol = array_search($extractLetterColumn[0], $rangeLetter);
+
+        if ($numberCol === false) {
+            throw new \Exception(`Impossible de lire la coordonnée {$coordinatesFromScript}`);
+        }
+
+        $numberRow = (int) $extractNumberRow[0] - 1;
+
+        return [$numberRow, (int) $numberCol];
+
     }
 
 
