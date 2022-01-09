@@ -84,16 +84,27 @@ class Game
     }
 
     /**
-     * Traduit les coordonnées du type [A-J][1-10] en [[0-9]Row, [0-9]Col]
+     * Transforme les coordonnées du type "CL" ^
+     * - C: la colonne peut être égal à [A-J]
+     * - L: la ligne qui peut être égale à [1-10]
+     * En tableau du type [[0-9]Row, [0-9]Col]
      *
-     * @param string $coordinatesFromScript  Coordonnées au format [A-J][1-10]
+     * @param string $coordinatesFromScript  Coordonnées au format [[A-J]Col][[1-10]Row] 
      * @return array Coordonnées au format [[0-9]Row, [0-9]Col]
      */
-    private function translateCoordinates(string $coordinatesFromScript): array
+    public static function translateCoordinatesToArray(string $coordinatesFromScript): array
     {
-        $result = [];
+        $result = [9,3];
 
         return $result;
+    }
+
+
+    public static function translateCoordinatesToString(array $coordinates): string 
+    {
+        $result = '';
+
+        return '';
     }
 
 }

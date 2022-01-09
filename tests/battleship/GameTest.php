@@ -30,36 +30,36 @@ class GameTest extends TestCase {
     }
 
     /**
-     * Test all ships should be placed into the board
+     * @dataProvider providerTestTranslateCoordinates
+     * Test traduction des coordonnées
      *
      * @return void
      */
-    public function testPlaceShipsOnGameBoard() {
-        
-        $game = new Game([10, 10]);
+    public function testTranslateCoordinatesToArray(string $coordinates, array $expectedResult)
+    {
+        $result = Game::translateCoordinatesToArray($coordinates);
 
-        $game->placeShipOnGameBoard();
+        $this->assertEquals($expectedResult, $result);
 
-        $myGameBoard = $game->myGameBoard;
-        
-        $countCaseOfShip = array_sum(
+    }
 
-            array_map(function($array) {
 
-                $countValueOfArray = array_count_values($array);
-
-                if (array_key_exists('X', $countValueOfArray)) {
-                    return $countValueOfArray['X'];
-                }
-
-                return 0;
-
-            }, $myGameBoard->getBoard())
-
-        );
-
-        $this->assertEquals($countCaseOfShip, 17);
-        
+    public function providerTestTranslateCoordinates(): array
+    {
+        return [
+            [
+                'D10',
+                [9,3]
+            ],
+            [
+                'A1',
+                [0,0]
+            ],
+            [
+                'E8',
+                [7,4]
+            ]
+        ];
     }
 
 }
