@@ -63,8 +63,9 @@ class Game
      */
     public function handlingEnemyFire(string $coordinates): string
     {
+
         [$rowNumber, $colNumber] = self::translateCoordinatesToArray($coordinates);
-        // Translate coordinates
+
         $board = $this->myGameBoard->getBoard();
 
         $valueEmptyCell = Constants::getValueEmptyCell();
@@ -73,18 +74,16 @@ class Game
             return "miss\n";
         }
 
-        // Récupérer le ship par la valeur de la case et $this->myShips
-        $shipHit = $this->myShips[$board[$rowNumber][$colNumber]];
+        $listOfShipById = self::generateListOfShipsById($this->myShips);
 
-        // Retirer la coordonnée de $this->myShips[value cell]->positions
+        $shipHit = $listOfShipById[$board[$rowNumber][$colNumber]];
+
         $shipHit->beShot([$rowNumber, $colNumber]); 
 
-        // Si le $this->myShips[value cell]->positions est vide 
-        if (empty($shipHit->coordinates)) {
+        if ($shipHit->getState() === Constants::getStateSunkShip()) {
             return "sunk\n"; 
         }
 
-        // Modifier la valeur de la cell du board par Constants::getValueEmptyCell()
         $this->myGameBoard->setBoard([$rowNumber, $colNumber], $valueEmptyCell);
 
         return "hit\n";
@@ -129,6 +128,20 @@ class Game
         $result = '';
 
         return '';
+    }
+
+    /**
+     * Retourne la liste des bateaux avec l'identifiant en clé 
+     *
+     * @param array $arrayOfShips
+     * @return array
+     */
+    public static function generateListOfShipsById(array $arrayOfShips): array
+    {
+        $arrayColumn = array_column($arrayOfShips, 'identifiant');
+
+        return array_combine($arrayColumn, array_values($arrayOfShips));
+
     }
 
 }
