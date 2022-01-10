@@ -3,5 +3,8 @@
     <testsuite name="battleship test">
       <directory>./tests/battleship</directory>
     </testsuite>
+    <testsuite name="ship">
+      <file>tests\battleship\ShipTest.php</file>
+    </testsuite>
   </testsuites>
 </phpunit>

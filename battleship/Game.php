@@ -63,22 +63,29 @@ class Game
      */
     public function handlingEnemyFire(string $coordinates): string
     {
-        [$rowNumber, $colNumber] = $this->translateCoordinates($coordinates);
+        [$rowNumber, $colNumber] = self::translateCoordinatesToArray($coordinates);
         // Translate coordinates
         $board = $this->myGameBoard->getBoard();
+
+        $valueEmptyCell = Constants::getValueEmptyCell();
 
         if ($board[$rowNumber][$colNumber] === Constants::getValueEmptyCell()) {
             return "miss\n";
         }
 
         // Récupérer le ship par la valeur de la case et $this->myShips
+        $shipHit = $this->myShips[$board[$rowNumber][$colNumber]];
 
         // Retirer la coordonnée de $this->myShips[value cell]->positions
+        $shipHit->beShot([$rowNumber, $colNumber]); 
 
         // Si le $this->myShips[value cell]->positions est vide 
-            // return "sunk\n"; 
+        if (empty($shipHit->coordinates)) {
+            return "sunk\n"; 
+        }
 
         // Modifier la valeur de la cell du board par Constants::getValueEmptyCell()
+        $this->myGameBoard->setBoard([$rowNumber, $colNumber], $valueEmptyCell);
 
         return "hit\n";
     }
@@ -104,15 +111,15 @@ class Game
             throw new \Exception(`Impossible de lire la coordonnée {$coordinatesFromScript}`);
         }
 
-        $numberCol = array_search($extractLetterColumn[0], $rangeLetter);
+        $colNumber = array_search($extractLetterColumn[0], $rangeLetter);
 
-        if ($numberCol === false) {
+        if ($colNumber === false) {
             throw new \Exception(`Impossible de lire la coordonnée {$coordinatesFromScript}`);
         }
 
-        $numberRow = (int) $extractNumberRow[0] - 1;
+        $rowNumber = (int) $extractNumberRow[0] - 1;
 
-        return [$numberRow, (int) $numberCol];
+        return [$rowNumber, (int) $colNumber];
 
     }
 

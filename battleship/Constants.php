@@ -8,6 +8,7 @@ require "vendor/autoload.php";
 class Constants {
     
     const STATE_ALIVE_SHIP = 'alive';
+    const STATE_SUNK_SHIP = 'sunk';
 
     const HORIZONTAL_ORENTATION_SHIP = 'horizontal';
     const VERTICAL_ORENTATION_SHIP = 'vertical';
@@ -17,6 +18,11 @@ class Constants {
 
     public static function getStateAliveShip() {
         return self::STATE_ALIVE_SHIP;
+    }
+
+    public static function getStateSunkShip()
+    {
+        return self::STATE_SUNK_SHIP;
     }
 
     public static function getHorizontalOrientationShip() {
