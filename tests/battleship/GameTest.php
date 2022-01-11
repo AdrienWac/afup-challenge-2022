@@ -63,6 +63,7 @@ class GameTest extends TestCase {
         ];
     }
 
+    
     public function testGenerateListOfShipsById()
     {   
         
@@ -77,17 +78,53 @@ class GameTest extends TestCase {
 
     }
 
-    public function testHandlingEnemyFireHitAShip()
+
+    /**
+     * @dataProvider providerEnnemyFire
+     *
+     * @return void
+     */
+    public function testHandlingEnemyFire(array $arrayShotsCoordinates, string $expectedResult)
     {
         // Initialisation du jeu
         $game = $this->initGameForHandlingEnemyFireTest();
 
         // Tirer sur une case du bateau
-        $resultEnemyFire = $game->handlingEnemyFire('A1');
+        foreach ($arrayShotsCoordinates as $shotCoordinates) {
+            $resultEnemyFire = $game->handlingEnemyFire($shotCoordinates);
+        }
 
         // Tester que l'on retourne bien Hit
-        $this->assertEquals("hit\n", $resultEnemyFire);
+        $this->assertEquals($expectedResult, $resultEnemyFire);
     }
+
+    /**
+     * Provider to test the handller method of ennemy fire 
+     *
+     * @return array
+     */
+    public function providerEnnemyFire(): array 
+    {
+        return [
+            [
+                ['A1'],
+                "hit\n"
+            ],
+            [
+                ['A1', 'B1'],
+                "sunk\n"
+            ],
+            [
+                ['B1', 'A1'],
+                "sunk\n"
+            ],
+            [
+                ['B2'],
+                "miss\n"
+            ]
+        ];
+    }
+
 
     /**
      * Initialisation du jeu pour les tests de traitement du tir enemi
@@ -112,34 +149,6 @@ class GameTest extends TestCase {
 
         return $game;
 
-    }
-
-    
-
-    public function handlingEnemyFireSunkAShip()
-    {
-        // Créer le jeu
-
-        // Créer un bateau de taille 1
-
-        // Placer le bateau
-
-        // Tirer sur la case du bateau
-
-        // Tester que l'on retourne bien Sunk
-    }
-
-    public function handlingEnemyFireMissShot()
-    {
-        // Créer le jeu
-
-        // Créer un bateau de taille 1
-
-        // Placer le bateau
-
-        // Tirer sur la case du bateau
-
-        // Tester que l'on retourne bien Miss
     }
 
 
