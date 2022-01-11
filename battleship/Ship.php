@@ -11,7 +11,7 @@ class Ship {
     public string $name;
     public int $size;
     public int $identifiant;
-    private string $state; 
+    public string $state; 
     public array $coordinates = [];
 
     function __construct(string $name, int $size, int $identifiant) {

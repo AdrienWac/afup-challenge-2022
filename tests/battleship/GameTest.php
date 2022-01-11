@@ -119,6 +119,10 @@ class GameTest extends TestCase {
                 "sunk\n"
             ],
             [
+                ['B1', 'A1', 'D5', 'E5'],
+                "won\n"
+            ],
+            [
                 ['B2'],
                 "miss\n"
             ]
@@ -134,18 +138,25 @@ class GameTest extends TestCase {
     private function initGameForHandlingEnemyFireTest(): Game
     {
         $game = new Game([5,5]);
+        $game->myShips = [];
+        $shipA = new Ship('TestA', 2, 1);
+        $shipB = new Ship('TestB', 2, 2);
 
-        $ship = new Ship('Test', 2, 1);
+        $arrayShipPositions = [1 => [[0, 0], [0, 1]], 2 => [[4, 3], [4, 4]]];
 
-        foreach ($arrayShipPositions = [[0,0], [0,1]] as $coordinates) {
+        foreach ([$shipA, $shipB] as $ship) {
 
-            $game->myGameBoard->setBoard($coordinates, $ship->identifiant);
+            foreach ($arrayShipPositions[$ship->identifiant] as $coordinates) {
+                
+                $game->myGameBoard->setBoard($coordinates, $ship->identifiant);
+
+            }
+
+            $ship->coordinates = $arrayShipPositions[$ship->identifiant];
+
+            $game->myShips[$ship->name] = $ship;
 
         }
-
-        $ship->coordinates = $arrayShipPositions;
-
-        $game->myShips = [$ship];
 
         return $game;
 

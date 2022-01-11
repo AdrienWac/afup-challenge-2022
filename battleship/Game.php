@@ -81,7 +81,13 @@ class Game
         $shipHit->beShot([$rowNumber, $colNumber]); 
 
         if ($shipHit->getState() === Constants::getStateSunkShip()) {
+            
+            if (!$this->hasAnyShipsAlive()) {
+                return "won\n";
+            }
+
             return "sunk\n"; 
+
         }
 
         $this->myGameBoard->setBoard([$rowNumber, $colNumber], $valueEmptyCell);
@@ -141,6 +147,15 @@ class Game
         $arrayColumn = array_column($arrayOfShips, 'identifiant');
 
         return array_combine($arrayColumn, array_values($arrayOfShips));
+
+    }
+
+    public function hasAnyShipsAlive(): bool
+    {
+
+        $listOfShipState = array_column($this->myShips, 'state');
+
+        return in_array(Constants::getStateAliveShip(), $listOfShipState);
 
     }
 
