@@ -7,7 +7,7 @@ require "vendor/autoload.php";
 use Battleship\GameBoard;
 use Battleship\Ship;
 
-class Game
+class Main
 {
 
     public GameBoard $myGameBoard;
@@ -17,6 +17,7 @@ class Game
     {
         $this->myGameBoard = new GameBoard($sizeBoard);
         $this->myShips = self::generateShips();
+        $this->placeShipOnGameBoard();
     }
 
     public function placeShipOnGameBoard()

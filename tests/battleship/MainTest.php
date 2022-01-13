@@ -1,14 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Battleship\Game;
+use Battleship\Main;
 use Battleship\Ship;
 
-class GameTest extends TestCase {
+class MainTest extends TestCase {
 
     public function testConstructGame() {
         
-        $game = new Game([10,10]);
+        $game = new Main([10,10]);
         $this->assertEquals(["AircraftCarrier", "Cruiser", "Destroyer1", "Destroyer2", "TorpedoBoat"], array_keys($game->myShips));
 
         $myGameBoard = $game->myGameBoard;
@@ -38,7 +38,7 @@ class GameTest extends TestCase {
      */
     public function testTranslateCoordinatesToArray(string $coordinates, array $expectedResult)
     {
-        $result = Game::translateCoordinatesToArray($coordinates);
+        $result = Main::translateCoordinatesToArray($coordinates);
 
         $this->assertEquals($expectedResult, $result);
 
@@ -70,7 +70,7 @@ class GameTest extends TestCase {
         $shipA = new Ship('testA', 2, 1);
         $shipB = new Ship('testB', 2, 2);
 
-        $listOfShips = Game::generateListOfShipsById(['testA' => $shipA, 'testB' => $shipB]);
+        $listOfShips = Main::generateListOfShipsById(['testA' => $shipA, 'testB' => $shipB]);
         
         $expectedResult = [1 => $shipA, 2 => $shipB ];
 
@@ -107,6 +107,10 @@ class GameTest extends TestCase {
     {
         return [
             [
+                ['A1', 'A1'],
+                "miss\n"
+            ],
+            [
                 ['A1'],
                 "hit\n"
             ],
@@ -133,11 +137,11 @@ class GameTest extends TestCase {
     /**
      * Initialisation du jeu pour les tests de traitement du tir enemi
      *
-     * @return Game
+     * @return Main
      */
-    private function initGameForHandlingEnemyFireTest(): Game
+    private function initGameForHandlingEnemyFireTest(): Main
     {
-        $game = new Game([5,5]);
+        $game = new Main([5,5]);
         $game->myShips = [];
         $shipA = new Ship('TestA', 2, 1);
         $shipB = new Ship('TestB', 2, 2);

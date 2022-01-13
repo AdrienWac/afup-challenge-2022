@@ -33,10 +33,10 @@ class GameBoard {
      * Set cell value of game board
      *
      * @param array $coordinates Table coordinates of cell
-     * @param string $value New value for cell
+     * @param mixed $value New value for cell
      * @return void
      */
-    public function setBoard(array $coordinates, string $value) {
+    public function setBoard(array $coordinates, mixed $value) {
         [$rowNumber, $colNumber] = $coordinates;
         $this->board[$rowNumber][$colNumber] = $value;
     }
