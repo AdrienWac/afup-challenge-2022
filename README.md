@@ -126,3 +126,7 @@ Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le 
                 // Je mets à jour l'attribut position du bateau avec le tableau des points
                 
             // Fin while
+
+## Commande de test 
+./vendor/bin/phpunit --filter ...
+./vendor/bin/phpunit --testSuite ...

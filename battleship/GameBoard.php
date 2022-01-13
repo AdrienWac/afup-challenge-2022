@@ -14,7 +14,6 @@ class GameBoard {
 
     function __construct(array $size)
     {   
-        $value = 
         $this->size = $size;
         [$numberMaxRow, $numberMaxCol] = $size;
         $this->board = array_fill(0, $numberMaxRow, array_fill(0, $numberMaxCol, Constants::getValueEmptyCell()));
