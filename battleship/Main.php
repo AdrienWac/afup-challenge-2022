@@ -79,7 +79,9 @@ class Main
 
         $shipHit = $listOfShipById[$board[$rowNumber][$colNumber]];
 
-        $shipHit->beShot([$rowNumber, $colNumber]); 
+        $shipHit->beShot([$rowNumber, $colNumber]);
+
+        $this->myGameBoard->setBoard([$rowNumber, $colNumber], $valueEmptyCell);
 
         if ($shipHit->getState() === Constants::getStateSunkShip()) {
             
@@ -90,8 +92,6 @@ class Main
             return "sunk\n"; 
 
         }
-
-        $this->myGameBoard->setBoard([$rowNumber, $colNumber], $valueEmptyCell);
 
         return "hit\n";
     }

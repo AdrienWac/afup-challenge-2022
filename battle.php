@@ -27,7 +27,12 @@ while (true) {
         $game->shoot();
     } elseif (preg_match('`^([A-J](?:[1-9]|10))$`i', $command)) { // Recevoir un coup
 
-        echo $game->handlingEnemyFire($command);
+        try {
+            //code...
+            echo $game->handlingEnemyFire($command);
+        } catch (\Throwable $th) {
+            var_dump($th);die;
+        }
 
         // // Si dernier bateau coulé, l'adversaire gagne
         // if ($count-- === 0) {
