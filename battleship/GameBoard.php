@@ -8,7 +8,7 @@ use Battleship\Constants;
 
 class GameBoard {
 
-    private array $size;
+    public array $size;
     private array $board;
     private array $ships;
 
