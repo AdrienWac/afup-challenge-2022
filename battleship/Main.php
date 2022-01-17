@@ -160,4 +160,20 @@ class Main
 
     }
 
+    /**
+     * Retourne le tableau des directions pour une orientation
+     *
+     * @param string $orientation
+     * @return array Tableau des directions
+     */
+    public static function getDirectionsByOrientation(string $orientation): array
+    {
+        $arrayDirections = [
+            Constants::getHorizontalOrientationShip() => [Constants::getLeftDirection(), Constants::getRightDirection()],
+            Constants::getVerticalOrientationShip() => [Constants::getUpDirection(), Constants::getDownDirection()]
+        ];
+
+        return $arrayDirections[$orientation];
+    }
+
 }

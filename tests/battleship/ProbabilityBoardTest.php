@@ -14,19 +14,19 @@ class ProbabilityBoardTest extends TestCase {
      * @param array $visitedCoordinates
      * @param array $coordinatesCell
      * @param string $orientation
-     * @param bool $expectedResult
+     * @param int $expectedResult
      * @return void
      */
-    public function testCalculateProbabilities(array $visitedCoordinates, array $coordinatesCell, string $orientation, bool $expectedResult)
+    public function testCalculateProbabilities(array $visitedCoordinates, array $coordinatesCell, string $orientation, int $expectedResult)
     {
-
-        $probabilityBoard = new ProbabilityBoard([5,5]);
-
-        $probabilityBoard->arrayVisitedCoordinates = $visitedCoordinates;
 
         $ship = new Ship('Test', 2, 1);
 
-        $probabilityValue = $probabilityBoard->canPutAShipInThisCell($ship, $coordinatesCell, $orientation);
+        $probabilityBoard = new ProbabilityBoard([5,5], [$ship], $visitedCoordinates);
+
+        $probabilityBoard->arrayVisitedCoordinates = $visitedCoordinates;
+
+        $probabilityValue = $probabilityBoard->calculProbabilitiesValue($ship, $coordinatesCell, $orientation);
 
         $this->assertEquals($expectedResult, $probabilityValue);
 
@@ -40,32 +40,8 @@ class ProbabilityBoardTest extends TestCase {
                 [[0, 0], [0, 1]],
                 [0,0],
                 Constants::getHorizontalOrientationShip(),
-                false
-            ],
-            [
-                [[0,2], [0,3]],
-                [0, 0],
-                Constants::getHorizontalOrientationShip(),
-                true
-            ],
-            [
-                [[0,1]],
-                [0, 0],
-                Constants::getHorizontalOrientationShip(),
-                false
-            ],
-            [
-                [[0, 1]],
-                [0, 3],
-                Constants::getHorizontalOrientationShip(),
-                true
-            ],
-            [
-                [[0, 1]],
-                [0, 4],
-                Constants::getHorizontalOrientationShip(),
-                false
-            ],
+                0
+            ]
         ];
     }
 

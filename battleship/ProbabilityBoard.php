@@ -13,48 +13,94 @@ class ProbabilityBoard extends GameBoard{
     public array $arrayVisitedCoordinates;
 
 
-    function __construct(array $size)
+    function __construct(array $size, array $ships, array $arrayVisitedCoordinates)
     {   
         parent::__construct($size);
+        $this->ships = $ships;
+        $this->arrayVisitedCoordinates = $arrayVisitedCoordinates;
     }
 
     /**
-     * Test si on peut poser un navire à partir d'une cellule.
-     * Retourne faux si le bateau passe pas, ou si une des cases a déjà été visité
-     * 
-     * @return int
+     * Génère le plateau de jeu des probabilités
+     *
+     * @return void
      */
-    public function canPutAShipInThisCell(Ship $ship, array $coordinatesCell, string $orientation): bool
+    public function generateBoard(): void
     {
+
+        // Pour chaque bateaux
+        foreach ($this->ships as $ship) {
+
+            $maxRowNumber = ($this->size[0] - $ship->size);
+            $maxColNumber = ($this->size[1] - $ship->size);
+
+
+            // Je calcul la probabilité de chaque case d'accueillir un bateau
+            for ($i=0; $i <= $maxRowNumber; $i++) { 
+                
+                for ($j=0; $j < $maxColNumber; $j++) {
+
+                    foreach ([Constants::getHorizontalOrientationShip(), Constants::getVerticalOrientationShip()] as $orientation) {
+
+                        $this->board[$i][$j] += $this->calculProbabilitiesValue($ship, [$i, $j], $orientation);
+
+                    }
+
+                }
+
+            }
+
+        }
+        
+    }
+
+    /**
+     * Calcul la probabilité qu'une cellule puisse être le point de départ du placement d'un bateau.
+     * Prend en compte l'orientation et les cellules déjà visitées
+     * 0 => le bateau ne peut être placé
+     * 1 => le bateau peut être placé dans une direction
+     * 2 => le bateau peut être placé dans les deux directions
+     *
+     * @param Ship $ship
+     * @param array $coordinatesCell
+     * @param string $orientation
+     * @return integer
+     */
+    public function calculProbabilitiesValue(Ship $ship, array $coordinatesCell, string $orientation): int
+    {
+        $probability = 0;
 
         // Si la coordonée est déjà visitée
         if (in_array($coordinatesCell, $this->arrayVisitedCoordinates)) {
             return false;
         }
         
-        // Si le bateau ne passe pas dans le board
         $rowOrColumnKey = $orientation == Constants::getHorizontalOrientationShip() ? 1 : 0;
-        if ($coordinatesCell[$rowOrColumnKey] + ($ship->size - 1) < 0 &&  $coordinatesCell[$rowOrColumnKey] + ($ship->size - 1) >= $this->size[$rowOrColumnKey]) {
-            return false;
-        }
-        
-        // Pour chaque coordonées potentiel du bateau
-        for ($i=0; $i < $ship->size; $i++) { 
 
-            // Si la coordonnée est hors du board
-            if ($coordinatesCell[$rowOrColumnKey] + $i < 0 || $coordinatesCell[$rowOrColumnKey] + $i >= $this->size[$rowOrColumnKey]) {
-                return false;
+        $directionsByOrientation = Main::getDirectionsByOrientation($orientation);
+
+        foreach ($directionsByOrientation[$orientation] as $direction) {
+
+            // Pour chaque coordonées potentiel du bateau
+            for ($i = 0; $i < $ship->size; $i++) {
+
+                $newCoordinates = $this->calculCoordinatesByDirection($coordinatesCell, $direction, $i);
+
+                // Si la coordonnée est hors du board
+                if ($newCoordinates[$rowOrColumnKey] < 0 || $newCoordinates[$rowOrColumnKey] >= $this->size[$rowOrColumnKey]) {
+                    continue;
+                }
+
+                // Si la coordonnée courante a été visité ?
+                if (in_array($newCoordinates, $this->arrayVisitedCoordinates)) {
+                    continue;
+                }
+
+                $probability++;
             }
-
-            // Si la coordonnée courante a été visité ?
-            $newCoordinates = $orientation == Constants::getHorizontalOrientationShip() ?  [$coordinatesCell[0], $coordinatesCell[1] + $i] : [$coordinatesCell[0] + $i, $coordinatesCell[1]];
-            if (in_array($newCoordinates, $this->arrayVisitedCoordinates)) {
-                return false;
-            }
-
         }
              
-        return true;
+        return $probability;
     }
 
 }

@@ -9,7 +9,7 @@ use Battleship\Constants;
 class GameBoard {
 
     public array $size;
-    private array $board;
+    public array $board;
     private array $ships;
 
     function __construct(array $size)
@@ -189,29 +189,7 @@ class GameBoard {
 
                 for ($i=0; $i < $ship->size; $i++) { 
 
-                    switch ($direction) {
-
-                        case 'up':
-                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0] - $i, $coordinatesOfReferenceCell[1]];
-                            break;
-
-                        case 'down':
-                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0] + $i, $coordinatesOfReferenceCell[1]];
-                            break;
-
-                        case 'left':
-                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0], $coordinatesOfReferenceCell[1] - $i];
-                            break;
-
-                        case 'right':
-                            $currentCellCoordinates = [$coordinatesOfReferenceCell[0], $coordinatesOfReferenceCell[1] + $i];
-                            break;
-                        
-                        default:
-                            $currentCellCoordinates = $coordinatesOfReferenceCell;
-                            break;
-
-                    }
+                    $currentCellCoordinates = $this->calculCoordinatesByDirection($coordinatesOfReferenceCell, $direction, $i);
 
                     // TODO J'ajoute ce point au tableau des points visités (à passer en référence) EST-CE VRAIMENT NECESSAIRE
                     if (!$this->isInTheBoard($currentCellCoordinates)) {
@@ -240,6 +218,42 @@ class GameBoard {
 
         return $result;
 
+    }
+
+    /**
+     * Calcul de coordonnées en fonction d'une direction et d'une valeur de pas
+     *
+     * @param array $coordinatesOfReference
+     * @param string $direction
+     * @param int $step
+     * @return array La nouvelle coordonnées
+     */
+    public function calculCoordinatesByDirection(array $coordinatesOfReference, string $direction, int $step): array
+    {
+        switch ($direction) {
+
+            case 'up':
+                $newCoordinates = [$coordinatesOfReference[0] - $step, $coordinatesOfReference[1]];
+                break;
+
+            case 'down':
+                $newCoordinates = [$coordinatesOfReference[0] + $step, $coordinatesOfReference[1]];
+                break;
+
+            case 'left':
+                $newCoordinates = [$coordinatesOfReference[0], $coordinatesOfReference[1] - $step];
+                break;
+
+            case 'right':
+                $newCoordinates = [$coordinatesOfReference[0], $coordinatesOfReference[1] + $step];
+                break;
+
+            default:
+                $newCoordinates = $coordinatesOfReference;
+                break;
+        }
+
+        return $newCoordinates;
     }
 
     /**
