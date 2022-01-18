@@ -8,7 +8,7 @@ require "vendor/autoload.php";
 
 interface IStrategy {
 
-    public function shoot(): string;
+    public function shoot(): array;
 
     public function generateBoard(): ProbabilityBoard;
 

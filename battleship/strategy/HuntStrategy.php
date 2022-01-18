@@ -23,9 +23,9 @@ class HuntStrategy implements IStrategy
         $this->arrayCellsVisited = $arrayCellsVisited;
     }
 
-    public function shoot(): string
+    public function shoot(): array
     {
-        return 'A1';
+        return [0,0];
     }
 
     /**

@@ -22,6 +22,9 @@ class Main
     public array $stackShoot = [];
     public string $mode;
 
+    public IStrategy $huntStrategy;
+    public IStrategy $targetStrategy;
+
     public IStrategy $strategy;
 
     function __construct(array $sizeBoard)
@@ -31,6 +34,9 @@ class Main
         $this->placeShipOnGameBoard();
         $this->mode = Constants::getHuntMode();
         $this->opponentShips = $this->generateShips();
+
+        $this->huntStrategy = new HuntStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells);
+        $this->targetStrategy = new TargetStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells, $this->coordinatesTargetCell);
 
     }
 
@@ -80,40 +86,46 @@ class Main
      */
     private function shootByProbabilityApproach(): string
     {
-        // Si on a des tirs en attente, on retourne la première coordonnée de la stack
-        if (!empty($this->stackShoot)) {
-            return array_shift($this->stackShoot);
-        }
-
-        // Sinon en fonction du mode, on instancie une stratégie
-        if ($this->mode === Constants::getHuntMode()) {
-            $this->strategy = new HuntStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells);
-        } else {
-            $this->strategy = new TargetStrategy($this->size, $this->targetShip, $this->arrayVisitedCells, $this->coordinatesTargetCell);
-        }
 
         // On génère le tableau des probabilités
-        $probabilityBoard = $this->strategy->generateBoard();
+        $this->strategy->generateBoard();
 
-        // On ajoute les coordonnées de tir à la stack
-        $this->stackShoot += $this->strategy->extractCoordinatesCellWithHighestProbability($probabilityBoard);
+        $arrayCoordinateShoot = $this->strategy->shoot();
 
-        
+        return self::translateCoordinatesToString($arrayCoordinateShoot);
+
+    }
 
 
-        // Initialise le plateau des probabilités en mode chasse = new ProbabilityBoard ->generateBoard(chasse)
-        // Initialise le plateau des probabilités en mode cible = new ProbabilityBoard 
-        // Initialise le mode d'attaque(chasse, cible) en chasse
-        // Initialise la stack de coordonnées pour un tir = []
-        // Initialise le tableau des coordonnées visités = []
-        // Initialise le tableau des bateaux restants = generateShips()
-        // Initialise le tableau des bateaux touchés
+    public function handlingEnemyAnswer(string $answer): void
+    {
+        switch ($answer) {
 
-        // Si mode chasse 
-            // Recherche la case avec la plus haute probabilité dans le board mode chasse
-            // Tir sur cette case
+            case 'hit':
+                if ($this->mode === Constants::getHuntMode()) {
+                    $this->setStrategy($this->targetStrategy);
+                } else {
+                    
+                }
+                break;
 
-        return 'A1';
+            case 'miss':
+                # code...
+                break;
+
+            case 'sunk':
+                # code...
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+    }
+
+    public function setStrategy(IStrategy $strategy): void
+    {
+        $this->strategy = $strategy;
     }
     
     /**

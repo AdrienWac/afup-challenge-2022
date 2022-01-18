@@ -20,9 +20,9 @@ class TargetStrategy implements IStrategy
         $this->coordinatesTargetCell = $coordinatesTargetCell;
     }
 
-    public function shoot(): string
+    public function shoot(): array
     {
-        return 'A1';
+        return [0, 0];
     }
 
     public function generateBoard(): ProbabilityBoard

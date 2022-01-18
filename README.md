@@ -141,56 +141,73 @@ Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le 
 // J'ajoute au tableau des coordonnées visités
 
 // Traitement réponse adversaire
-    // Si Réponse == Je touche
 
-        // Mode cible
-
-    // Fin Si
-
-    // Si Réponse == Je coule
-
-        // Mode chasse
-
-    // Fin Si
-
-------------------------------
+-----------------------------------------------------------------
 
 // Mode cible
 
 // Je génère le board de proba autour de la case ciblé
 
-// J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile)
+// J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile) pour les cases voisines de la case touchée
 
-// Je tire la 1ère coordonnée de la stack
+// Je tire sur la 1ère coordonnée de la stack
 
 // J'ajoute au tableau des coordonnées visitées
 
 // Traitement réponse adversaire
 
-    // Si réponse == je touche
 
-        // Je génère le board de proba autour de la case ciblé*
 
-        // J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile)
+-----------------------------
 
-    // Fin si
+// Traitement réponse adversaire
+
+    // Si Réponse == Je touche
+
+        // Si Mode Chasse 
+
+            // Mode cible
+
+        // Sinon
+
+            // Je stocke la coordonnée dans le tableau des cases touchées
+
+            // Je génère le board de proba autour de la case ciblé
+
+            // J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile)
+
+        // Fin Si
+
+    // Fin Si
 
     // Si réponse == loupé
 
-        // Si stack de tir vide 
+        // Si Mode cible 
 
-            // Mode chasse
+            // Si stack de tir vide 
 
-        // Fin si
+                // Mode chasse
 
-        // 
+            // Fin si
+
+        // Fin Si
 
     // Fin si
 
     // Si réponse == coulé 
 
-        // Mode chasse
+        // Si mode cible
+
+            // Je determine le bateau coulé en fonction de la taille du tableau des cases touchées
+
+            // Je supprime ce bateau du tableau des navires
+
+            // Je vide le tableau des cases touchées
+
+            // Mode chasse
+
+        // Fin si
 
     // Fin si
 
-// Fin traitement réponse adversaire
+------------------------------
