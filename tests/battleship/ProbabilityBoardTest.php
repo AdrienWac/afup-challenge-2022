@@ -41,6 +41,18 @@ class ProbabilityBoardTest extends TestCase {
                 [0,0],
                 Constants::getHorizontalOrientationShip(),
                 0
+            ],
+            [
+                [[0, 1]],
+                [0, 0],
+                Constants::getHorizontalOrientationShip(),
+                0
+            ],
+            [
+                [],
+                [0, 1],
+                Constants::getHorizontalOrientationShip(),
+                2
             ]
         ];
     }

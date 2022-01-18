@@ -31,14 +31,10 @@ class ProbabilityBoard extends GameBoard{
         // Pour chaque bateaux
         foreach ($this->ships as $ship) {
 
-            $maxRowNumber = ($this->size[0] - $ship->size);
-            $maxColNumber = ($this->size[1] - $ship->size);
-
-
             // Je calcul la probabilité de chaque case d'accueillir un bateau
-            for ($i=0; $i <= $maxRowNumber; $i++) { 
+            for ($i=0; $i < $this->size[0]; $i++) { 
                 
-                for ($j=0; $j < $maxColNumber; $j++) {
+                for ($j=0; $j < $this->size[1]; $j++) {
 
                     foreach ([Constants::getHorizontalOrientationShip(), Constants::getVerticalOrientationShip()] as $orientation) {
 
@@ -68,36 +64,51 @@ class ProbabilityBoard extends GameBoard{
      */
     public function calculProbabilitiesValue(Ship $ship, array $coordinatesCell, string $orientation): int
     {
-        $probability = 0;
-
-        // Si la coordonée est déjà visitée
         if (in_array($coordinatesCell, $this->arrayVisitedCoordinates)) {
-            return false;
+            return 0;
         }
         
         $rowOrColumnKey = $orientation == Constants::getHorizontalOrientationShip() ? 1 : 0;
 
         $directionsByOrientation = Main::getDirectionsByOrientation($orientation);
 
-        foreach ($directionsByOrientation[$orientation] as $direction) {
+        $canPutShipInCell = function($coordinatesCell) use($rowOrColumnKey) {
+            
+            // Si la coordonnée est hors du board
+            if ($coordinatesCell[$rowOrColumnKey] < 0 || $coordinatesCell[$rowOrColumnKey] >= $this->size[$rowOrColumnKey]) {
+                return false;
+            }
+
+            // Si la coordonnée courante a été visité ?
+            if (in_array($coordinatesCell, $this->arrayVisitedCoordinates)) {
+                return false;
+            }
+
+            return true;
+
+        };
+
+        if (!$canPutShipInCell($coordinatesCell)) {
+            return 0;
+        }
+
+        $probability = 0;
+
+        foreach ($directionsByOrientation as $direction) {
 
             // Pour chaque coordonées potentiel du bateau
-            for ($i = 0; $i < $ship->size; $i++) {
+            for ($i = 1; $i < $ship->size; $i++) {
 
                 $newCoordinates = $this->calculCoordinatesByDirection($coordinatesCell, $direction, $i);
 
-                // Si la coordonnée est hors du board
-                if ($newCoordinates[$rowOrColumnKey] < 0 || $newCoordinates[$rowOrColumnKey] >= $this->size[$rowOrColumnKey]) {
-                    continue;
+                if(!$canPutShipInCell($newCoordinates)) {
+                    continue 2;     
                 }
 
-                // Si la coordonnée courante a été visité ?
-                if (in_array($newCoordinates, $this->arrayVisitedCoordinates)) {
-                    continue;
-                }
-
-                $probability++;
             }
+
+            $probability++;
+
         }
              
         return $probability;
