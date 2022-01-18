@@ -21,37 +21,7 @@ class ProbabilityBoard extends GameBoard{
     }
 
     /**
-     * Génère le plateau de jeu des probabilités
-     *
-     * @return void
-     */
-    public function generateBoard(): void
-    {
-
-        // Pour chaque bateaux
-        foreach ($this->ships as $ship) {
-
-            // Je calcul la probabilité de chaque case d'accueillir un bateau
-            for ($i=0; $i < $this->size[0]; $i++) { 
-                
-                for ($j=0; $j < $this->size[1]; $j++) {
-
-                    foreach ([Constants::getHorizontalOrientationShip(), Constants::getVerticalOrientationShip()] as $orientation) {
-
-                        $this->board[$i][$j] += $this->calculProbabilitiesValue($ship, [$i, $j], $orientation);
-
-                    }
-
-                }
-
-            }
-
-        }
-        
-    }
-
-    /**
-     * Calcul la probabilité qu'une cellule puisse être le point de départ du placement d'un bateau.
+     * Calcul la probabilité qu'une cellule puisse accueillir un bateau.
      * Prend en compte l'orientation et les cellules déjà visitées
      * 0 => le bateau ne peut être placé
      * 1 => le bateau peut être placé dans une direction

@@ -13,7 +13,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Battleship\\": "battleship/"
+            "Battleship\\": "battleship/",
+            "Battleship\\Strategy\\": "battleship/strategy"
         }
     },
     "autoload-dev": {

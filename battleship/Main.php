@@ -6,12 +6,14 @@ require "vendor/autoload.php";
 
 use Battleship\GameBoard;
 use Battleship\Ship;
+use Battleship\Strategy\IStrategy;
 
 class Main
 {
 
     public GameBoard $myGameBoard;
     public array $myShips = [];
+    public IStrategy $strategy;
 
     function __construct(array $sizeBoard)
     {
@@ -53,9 +55,35 @@ class Main
      */
     public function shoot(): void
     {
-        echo chr(mt_rand(65, 74)), mt_rand(1, 10), "\n";
+        // echo chr(mt_rand(65, 74)), mt_rand(1, 10), "\n";
+
+        echo $this->shootByProbabilityApproach(), "\n";
+
     }
 
+    /**
+     * Génère le tir via une approche de probabilité
+     * 
+     * @return string Retourne les coordonnées au format [A-J][1-10]
+     */
+    private function shootByProbabilityApproach(): string
+    {
+
+        // Initialise le plateau des probabilités en mode chasse = new ProbabilityBoard ->generateBoard(chasse)
+        // Initialise le plateau des probabilités en mode cible = new ProbabilityBoard 
+        // Initialise le mode d'attaque(chasse, cible) en chasse
+        // Initialise la stack de coordonnées pour un tir = []
+        // Initialise le tableau des coordonnées visités = []
+        // Initialise le tableau des bateaux restants = generateShips()
+        // Initialise le tableau des bateaux touchés
+
+        // Si mode chasse 
+            // Recherche la case avec la plus haute probabilité dans le board mode chasse
+            // Tir sur cette case
+
+        return 'A1';
+    }
+    
     /**
      * Traiter le tir ennemi
      *
@@ -162,16 +190,20 @@ class Main
 
     /**
      * Retourne le tableau des directions pour une orientation
-     *
-     * @param string $orientation
+     * Si $orientation est null retourne les directions pour toutes les orientations.
+     * @param string|null $orientation
      * @return array Tableau des directions
      */
-    public static function getDirectionsByOrientation(string $orientation): array
+    public static function getDirectionsByOrientation(?string $orientation = null): array
     {
         $arrayDirections = [
             Constants::getHorizontalOrientationShip() => [Constants::getLeftDirection(), Constants::getRightDirection()],
             Constants::getVerticalOrientationShip() => [Constants::getUpDirection(), Constants::getDownDirection()]
         ];
+
+        if (is_null($orientation)) {
+            return $arrayDirections;
+        }
 
         return $arrayDirections[$orientation];
     }
