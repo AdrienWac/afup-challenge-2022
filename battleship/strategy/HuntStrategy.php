@@ -16,7 +16,7 @@ class HuntStrategy implements IStrategy
 
     public ProbabilityBoard $probabilityBoard;
 
-    public function __construct(public array $size = [10,10], public array $ships = [], public array $arrayCellsVisited = [])
+    public function __construct(public array $size = [10,10], public array &$ships = [], public array &$arrayCellsVisited = [])
     {
         $this->size = $size;
         $this->ships = $ships;
@@ -57,6 +57,11 @@ class HuntStrategy implements IStrategy
 
         return $this->probabilityBoard;
 
+    }
+
+    public function extractCoordinatesCellWithHighestProbability(ProbabilityBoard $board): array
+    {
+        return [0,0];
     }
 
 }

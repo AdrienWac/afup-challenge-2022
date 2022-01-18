@@ -13,13 +13,25 @@ class Constants {
     const HORIZONTAL_ORENTATION_SHIP = 'horizontal';
     const VERTICAL_ORENTATION_SHIP = 'vertical';
 
+    const HUNT_MODE = 'hunt';
+    const TARGET_MODE = 'target';
+
     const LEFT_DIRECTION = 'left';
     const RIGHT_DIRECTION = 'right';
     const UP_DIRECTION = 'up';
     const DOWN_DIRECTION = 'down';
 
     const VALUE_EMPTY_CELL = 0;
-    
+
+    public static function getHuntMode()
+    {
+        return self::HUNT_MODE;
+    }
+
+    public static function getTargetMode()
+    {
+        return self::TARGET_MODE;
+    }
 
     public static function getStateAliveShip() {
         return self::STATE_ALIVE_SHIP;
