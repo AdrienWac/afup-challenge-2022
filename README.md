@@ -130,3 +130,67 @@ Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le 
 ## Commande de test 
 ./vendor/bin/phpunit --filter ...
 ./vendor/bin/phpunit --testSuite ...
+
+## Strategy de tir
+// Mode chasse 
+
+// Je génére le board de proba
+
+// Je tire
+
+// J'ajoute au tableau des coordonnées visités
+
+// Traitement réponse adversaire
+    // Si Réponse == Je touche
+
+        // Mode cible
+
+    // Fin Si
+
+    // Si Réponse == Je coule
+
+        // Mode chasse
+
+    // Fin Si
+
+------------------------------
+
+// Mode cible
+
+// Je génère le board de proba autour de la case ciblé
+
+// J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile)
+
+// Je tire la 1ère coordonnée de la stack
+
+// J'ajoute au tableau des coordonnées visitées
+
+// Traitement réponse adversaire
+
+    // Si réponse == je touche
+
+        // Je génère le board de proba autour de la case ciblé*
+
+        // J'ajoute les coordonnées à la stack de tire par ordre de proba (proba la + forte en haut de la pile)
+
+    // Fin si
+
+    // Si réponse == loupé
+
+        // Si stack de tir vide 
+
+            // Mode chasse
+
+        // Fin si
+
+        // 
+
+    // Fin si
+
+    // Si réponse == coulé 
+
+        // Mode chasse
+
+    // Fin si
+
+// Fin traitement réponse adversaire
