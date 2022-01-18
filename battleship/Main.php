@@ -6,13 +6,22 @@ require "vendor/autoload.php";
 
 use Battleship\GameBoard;
 use Battleship\Ship;
+use Battleship\Strategy\HuntStrategy;
 use Battleship\Strategy\IStrategy;
+use TargetStrategy;
 
 class Main
 {
 
     public GameBoard $myGameBoard;
     public array $myShips = [];
+    public array $opponentShips = [];
+    public array $arrayVisitedCells = [];
+    public Ship $targetShip;
+    public array $coordinatesTargetCell;
+    public array $stackShoot = [];
+    public string $mode;
+
     public IStrategy $strategy;
 
     function __construct(array $sizeBoard)
@@ -20,6 +29,9 @@ class Main
         $this->myGameBoard = new GameBoard($sizeBoard);
         $this->myShips = self::generateShips();
         $this->placeShipOnGameBoard();
+        $this->mode = Constants::getHuntMode();
+        $this->opponentShips = $this->generateShips();
+
     }
 
     public function placeShipOnGameBoard()
@@ -68,6 +80,26 @@ class Main
      */
     private function shootByProbabilityApproach(): string
     {
+        // Si on a des tirs en attente, on retourne la première coordonnée de la stack
+        if (!empty($this->stackShoot)) {
+            return array_shift($this->stackShoot);
+        }
+
+        // Sinon en fonction du mode, on instancie une stratégie
+        if ($this->mode === Constants::getHuntMode()) {
+            $this->strategy = new HuntStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells);
+        } else {
+            $this->strategy = new TargetStrategy($this->size, $this->targetShip, $this->arrayVisitedCells, $this->coordinatesTargetCell);
+        }
+
+        // On génère le tableau des probabilités
+        $probabilityBoard = $this->strategy->generateBoard();
+
+        // On ajoute les coordonnées de tir à la stack
+        $this->stackShoot += $this->strategy->extractCoordinatesCellWithHighestProbability($probabilityBoard);
+
+        
+
 
         // Initialise le plateau des probabilités en mode chasse = new ProbabilityBoard ->generateBoard(chasse)
         // Initialise le plateau des probabilités en mode cible = new ProbabilityBoard 
