@@ -1,5 +1,9 @@
 <?php
 
+namespace Battleship\Strategy;
+
+require "vendor/autoload.php";
+
 use Battleship\ProbabilityBoard;
 use Battleship\Ship;
 use Battleship\Strategy\IStrategy;
@@ -27,6 +31,14 @@ class TargetStrategy implements IStrategy
 
     public function generateBoard(): ProbabilityBoard
     {
+        
+        $this->probabilityBoard = new ProbabilityBoard($this->size, $this->ships, $this->arrayCellsVisited);
+        $this->probabilityBoard->board = [
+            [0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+        ];
         // On calcul la probabilité des cases autour de la case cible
 
         // Init le tableau des directions par les orientations Main::getDirectionsByOrientation(null)
