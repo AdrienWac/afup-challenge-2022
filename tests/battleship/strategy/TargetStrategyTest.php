@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Battleship\Ship;
+use Battleship\ShootHistoric;
 use Battleship\Strategy\TargetStrategy;
 
 
@@ -21,7 +22,9 @@ class TargetStrategyTest extends TestCase {
 
         $arrayCellVisited = [[0,1]];
 
-        $targetStrategy = new TargetStrategy([3,5], $arrayShips, $arrayCellVisited, $coordinatesTargetCell);
+        $shootHistoric = new ShootHistoric();
+
+        $targetStrategy = new TargetStrategy([3,5], $arrayShips, $arrayCellVisited, $shootHistoric);
 
         $expectedResult = [
             [0, 0, 0, 0, 0],
@@ -30,6 +33,22 @@ class TargetStrategyTest extends TestCase {
         ];
 
         $this->assertEquals($expectedResult, $targetStrategy->generateBoard()->board);
+
+    }
+
+
+    public function testSetTargetCellCoordinates()
+    {
+
+        $shootHistoric = new ShootHistoric();
+
+        $shootHistoric->addShootToHistoric(['first']);
+
+        $shootHistoric->addShootToHistoric(['second']);
+        
+        $shootHistoric->addShootToHistoric(['third']);
+
+        $this->assertEquals($shootHistoric->getLastShootInformation(), ['third']);
 
     }
 

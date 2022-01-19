@@ -4,11 +4,12 @@ namespace Battleship\Strategy;
 
 require "vendor/autoload.php";
 
+use Battleship\Constants;
 use Battleship\Main;
 use Battleship\ProbabilityBoard;
 use Battleship\Ship;
+use Battleship\ShootHistoric;
 use Battleship\Strategy\IStrategy;
-use SplDoublyLinkedList;
 
 /**
  * Stratégie de cible après un tir réussi
@@ -21,12 +22,13 @@ class TargetStrategy implements IStrategy
     private string $currentOrientation;
     private string $currentDirection;
 
-    public function __construct(public array $size = [10, 10], public array &$ships = [], public array &$arrayCellsVisited = [], public SplDoublyLinkedList &$shootHistoric)
+    public function __construct(public array $size = [10, 10], public array &$ships = [], public array &$arrayCellsVisited = [], public ShootHistoric &$shootHistoric)
     {
         $this->size = $size;
         $this->ships = $ships;
         $this->arrayCellsVisited = $arrayCellsVisited;
         $this->shootHistoric = $shootHistoric;
+        $this->stackShoot = [];
 
     }
 
@@ -84,26 +86,36 @@ class TargetStrategy implements IStrategy
 
     }
 
+    /**
+     * Mise à jour des coordonnées de la case cible en fonction de l'historique de tir
+     *
+     * @return void
+     */
     public function setTargetCellCoordinates(): void
     {
-        // Si dernier shoot est un hit en mode chasse dans l'historique
-        //     // La case cible est celle de ce tir
-        // FIN 
 
-        // Si dernier shoot est un hit en mode cible dans l'historique
-        //     // La case cible est celle de ce tir
-        // FIN
+        $lastShootInformation = $this->shootHistoric->getLastShootInformation();
+
+        if ($lastShootInformation['result'] === 'hit' && in_array($lastShootInformation['mode'], [Constants::getHuntMode(), Constants::getTargetMode()])) {
+            $this->coordinatesTargetCell = $lastShootInformation['arrayCoordinates'];
+            return;
+        }
 
         // Si dernier shoot est un miss en mode cible dans l'historique
-        //     Si la stack à shoot est vide ==> Je retourne null (on devra repasser en mode chasse dans ce cas)
-        //     Sinon Je prend la première dans la stack à shoot
-        // FIN
+        if ($lastShootInformation['result'] === 'hit' && $lastShootInformation['mode'] == Constants::getTargetMode()) {
 
-        // Si dernier shoot est un skunk  (Ce n'est pas possible normalement)
-        //     Je retourne null (on devra repasser en mode chasse dans ce cas)
-        // FIN
+            if (empty($this->stackShoot)) {
+                throw new \Exception('Pas de coordonnées de tir en réserve. Passer en mode chasse.');
+            }
 
-        $this->coordinatesTargetCell = [0,0];
+            $this->coordinatesTargetCell = array_shift($this->stackShoot);
+
+        }
+
+        if ($lastShootInformation['result'] === 'skunk') {
+            throw new \Exception('Le dernier tir à couler un bateau. Passer en mode chasse.');
+        }
+
     }
 
     public function getCurrentOrientation(): ?string

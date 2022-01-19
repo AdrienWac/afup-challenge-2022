@@ -28,7 +28,10 @@ class ShootHistoric {
 
     }
 
-
+    public function getLastShootInformation(): array
+    {
+        return $this->stackShootHistoric->bottom();
+    }
 
 
 }
