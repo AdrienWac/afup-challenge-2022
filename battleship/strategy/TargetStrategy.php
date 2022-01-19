@@ -4,6 +4,7 @@ namespace Battleship\Strategy;
 
 require "vendor/autoload.php";
 
+use Battleship\Main;
 use Battleship\ProbabilityBoard;
 use Battleship\Ship;
 use Battleship\Strategy\IStrategy;
@@ -16,7 +17,7 @@ class TargetStrategy implements IStrategy
 
     public ProbabilityBoard $probabilityBoard;
 
-    public function __construct(public array $size = [10, 10], public array &$ships, public array &$arrayCellsVisited = [], public array $coordinatesTargetCell = [0,0])
+    public function __construct(public array $size = [10, 10], public array &$ships, public array &$arrayCellsVisited = [], public array $coordinatesTargetCell)
     {
         $this->size = $size;
         $this->ships = $ships;
@@ -33,17 +34,32 @@ class TargetStrategy implements IStrategy
     {
         
         $this->probabilityBoard = new ProbabilityBoard($this->size, $this->ships, $this->arrayCellsVisited);
-        $this->probabilityBoard->board = [
-            [0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
-        ];
         // On calcul la probabilité des cases autour de la case cible
 
         // Init le tableau des directions par les orientations Main::getDirectionsByOrientation(null)
+        $arrayDirectionsByOrientation = Main::getDirectionsByOrientation();
 
         // Pour chaque bateau $ships
+        foreach ($this->ships as $ship) {
+            
+            $ship->size--;
+
+            foreach ($arrayDirectionsByOrientation as $orientation => $arrayDirections) {
+                
+                foreach ($arrayDirections as $direction) {
+
+                    $newCoordinates = $this->probabilityBoard->calculCoordinatesByDirection($this->coordinatesTargetCell, $direction, 1);
+                    $probabilityValue = $this->probabilityBoard->calculProbabilitiesValue($ship, $newCoordinates, $orientation);
+                    if ($probabilityValue > 0) {
+                        $this->probabilityBoard->board[$newCoordinates[0]][$newCoordinates[1]] += $probabilityValue;
+                    }
+
+
+                }
+
+            }
+
+        }
             // Pour chaque orientation
                 // Pour chaque direction 
                     // Calcul de la nouvelle coordonnée calculCoordinatesByDirection($direction, $coordinatesTargetCell, 1)
