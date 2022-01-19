@@ -27,7 +27,6 @@ class TargetStrategyTest extends TestCase {
             [0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0],
         ];
 
         $this->assertEquals($expectedResult, $targetStrategy->generateBoard()->board);

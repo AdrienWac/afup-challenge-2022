@@ -170,7 +170,7 @@ Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le 
 
         // Sinon
 
-            // Je stocke la coordonnée dans le tableau des cases touchées
+            // Je stocke la coordonnée dans le tableau des cases touchées avec la direction du tir
 
             // Je génère le board de proba autour de la case ciblé
 
@@ -187,6 +187,12 @@ Attention : Quand un bateau est touché ou coulé, le joueur ayant effectué le 
             // Si stack de tir vide 
 
                 // Mode chasse
+
+            // Sinon
+
+                // Je vide la stack de tire (Sûr ?)
+
+                // Je prend la coordonnée du tir loupé et je remplis la stack de tir avec le 
 
             // Fin si
 

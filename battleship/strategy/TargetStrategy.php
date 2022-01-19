@@ -42,18 +42,19 @@ class TargetStrategy implements IStrategy
         // Pour chaque bateau $ships
         foreach ($this->ships as $ship) {
             
-            $ship->size--;
-
             foreach ($arrayDirectionsByOrientation as $orientation => $arrayDirections) {
                 
                 foreach ($arrayDirections as $direction) {
 
-                    $newCoordinates = $this->probabilityBoard->calculCoordinatesByDirection($this->coordinatesTargetCell, $direction, 1);
-                    $probabilityValue = $this->probabilityBoard->calculProbabilitiesValue($ship, $newCoordinates, $orientation);
+                    // TODO On initialise la valeur de proba à 1 si le dernier tir touché est dans cette direction
+                    // $probabilityValue = Si la direction du dernier tir touché === $direction ? 1 : 0
+                    $probabilityValue = 0;
+                    $probabilityValue += $this->probabilityBoard->calculProbabilitiesValueByDirection($ship, $this->coordinatesTargetCell, $direction);
+
                     if ($probabilityValue > 0) {
+                        $newCoordinates = $this->probabilityBoard->calculCoordinatesByDirection($this->coordinatesTargetCell, $direction, 1);
                         $this->probabilityBoard->board[$newCoordinates[0]][$newCoordinates[1]] += $probabilityValue;
                     }
-
 
                 }
 
