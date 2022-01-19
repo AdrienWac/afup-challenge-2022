@@ -6,6 +6,7 @@ require "vendor/autoload.php";
 
 use Battleship\Constants;
 use Battleship\GameBoard;
+use PHPUnit\TextUI\XmlConfiguration\Constant;
 
 class ProbabilityBoard extends GameBoard{
 
@@ -42,23 +43,7 @@ class ProbabilityBoard extends GameBoard{
 
         $directionsByOrientation = Main::getDirectionsByOrientation($orientation);
 
-        $canPutShipInCell = function($coordinatesCell) use($rowOrColumnKey) {
-            
-            // Si la coordonnée est hors du board
-            if ($coordinatesCell[$rowOrColumnKey] < 0 || $coordinatesCell[$rowOrColumnKey] >= $this->size[$rowOrColumnKey]) {
-                return false;
-            }
-
-            // Si la coordonnée courante a été visité ?
-            if (in_array($coordinatesCell, $this->arrayVisitedCoordinates)) {
-                return false;
-            }
-
-            return true;
-
-        };
-
-        if (!$canPutShipInCell($coordinatesCell)) {
+        if (!$this->canPutShipInCell($coordinatesCell, $directionsByOrientation[0])) {
             return 0;
         }
 
@@ -66,22 +51,61 @@ class ProbabilityBoard extends GameBoard{
 
         foreach ($directionsByOrientation as $direction) {
 
-            // Pour chaque coordonées potentiel du bateau
-            for ($i = 1; $i < $ship->size; $i++) {
-
-                $newCoordinates = $this->calculCoordinatesByDirection($coordinatesCell, $direction, $i);
-
-                if(!$canPutShipInCell($newCoordinates)) {
-                    continue 2;     
-                }
-
-            }
-
-            $probability++;
+            $probability += $this->calculProbabilitiesValueByDirection($ship, $coordinatesCell, $direction); 
 
         }
              
         return $probability;
+    }
+
+    /**
+     * Calcul la probabilité qu'un bateau puisse être sur une case pour une direction donnée
+     *
+     * @param Ship $ship
+     * @param array $coordinatesCell
+     * @param string $direction
+     * @return integer
+     */
+    public function calculProbabilitiesValueByDirection(Ship $ship, array $coordinatesCell, string $direction): int
+    {
+        // Pour chaque coordonées potentiel du bateau
+        for ($i = 1; $i < $ship->size; $i++) {
+
+            $newCoordinates = $this->calculCoordinatesByDirection($coordinatesCell, $direction, $i);
+
+            if (!$this->canPutShipInCell($newCoordinates, $direction)) {
+                return 0;
+            }
+
+        }
+
+        return 1;
+    }
+
+    /**
+     * Test si une partie d'un bateau peut être déposé sur une case
+     *
+     * @param array $coordinatesCell
+     * @param string $direction right, left, up, down.
+     * @return boolean False si la case est en dehors du board ou déjà visitée. True sinon.
+     */
+    private function canPutShipInCell(array $coordinatesCell, string $direction): bool
+    {
+        // En fontion de la direction, on peut savoir si on test les colonnes ou les lignes
+        $rowOrColumnKey = in_array($direction, [Constants::getLeftDirection(), Constants::getRightDirection()]) ? 1 : 0;
+
+        // Si la coordonnée est hors du board
+        if ($coordinatesCell[$rowOrColumnKey] < 0 || $coordinatesCell[$rowOrColumnKey] >= $this->size[$rowOrColumnKey]) {
+            return false;
+        }
+
+        // Si la coordonnée courante a été visité ?
+        if (in_array($coordinatesCell, $this->arrayVisitedCoordinates)) {
+            return false;
+        }
+
+        return true;
+
     }
 
 }
