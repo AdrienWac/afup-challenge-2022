@@ -6,7 +6,6 @@ require "vendor/autoload.php";
 
 use Battleship\Constants;
 use Battleship\GameBoard;
-use PHPUnit\TextUI\XmlConfiguration\Constant;
 
 class ProbabilityBoard extends GameBoard{
 

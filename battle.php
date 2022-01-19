@@ -37,6 +37,7 @@ while (true) {
         }
 
     } elseif (preg_match('`^hit|miss|sunk$`i', $command)) { // Recevoir un résultat de l'adversaire
+        $game->handlingEnemyAnswer($command);
         echo "ok\n";
     } elseif ($command === 'won') { // Recevoir le résultat de victoire
         echo "ok\n";

@@ -6,37 +6,48 @@ require "vendor/autoload.php";
 
 use Battleship\GameBoard;
 use Battleship\Ship;
-use Battleship\Strategy\HuntStrategy;
+use Battleship\ShootHistoric;
 use Battleship\Strategy\IStrategy;
-use TargetStrategy;
+use Battleship\Strategy\HuntStrategy;
+use Battleship\Strategy\TargetStrategy;
+
+
 
 class Main
 {
 
     public GameBoard $myGameBoard;
+
     public array $myShips = [];
     public array $opponentShips = [];
-    public array $arrayVisitedCells = [];
-    public Ship $targetShip;
-    public array $coordinatesTargetCell;
-    public array $stackShoot = [];
+
     public string $mode;
+
+    public ShootHistoric $shootHistoric;
 
     public IStrategy $huntStrategy;
     public IStrategy $targetStrategy;
 
     public IStrategy $strategy;
 
+    public array $arrayCellsVisited = [];
+
     function __construct(array $sizeBoard)
     {
+
         $this->myGameBoard = new GameBoard($sizeBoard);
+        
+        $this->opponentShips = self::generateShips();
+        
         $this->myShips = self::generateShips();
         $this->placeShipOnGameBoard();
-        $this->mode = Constants::getHuntMode();
-        $this->opponentShips = $this->generateShips();
 
-        $this->huntStrategy = new HuntStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells);
-        $this->targetStrategy = new TargetStrategy($this->size, $this->opponentShips, $this->arrayVisitedCells, $this->coordinatesTargetCell);
+        $this->mode = Constants::getHuntMode();
+
+        $this->shootHistoric = new ShootHistoric();
+
+        $this->huntStrategy = new HuntStrategy($sizeBoard, $this->opponentShips, $this->arrayCellsVisited, $this->shootHistoric);
+        $this->targetStrategy = new TargetStrategy($sizeBoard, $this->opponentShips, $this->arrayCellsVisited, $this->shootHistoric);
 
     }
 
@@ -73,9 +84,10 @@ class Main
      */
     public function shoot(): void
     {
-        // echo chr(mt_rand(65, 74)), mt_rand(1, 10), "\n";
+        echo chr(mt_rand(65, 74)), mt_rand(1, 10), "\n";
 
-        echo $this->shootByProbabilityApproach(), "\n";
+        // echo $this->shootByProbabilityApproach(), "\n";
+        $this->shootByProbabilityApproach();
 
     }
 
@@ -86,26 +98,51 @@ class Main
      */
     private function shootByProbabilityApproach(): string
     {
+        // Définit la stratégie de tir en fonction du mode
+        $this->strategy = $this->mode === Constants::getHuntMode() ? $this->huntStrategy : $this->targetStrategy;
 
         // On génère le tableau des probabilités
         $this->strategy->generateBoard();
 
+        // On récupère le tableau des coordonnées de tir
         $arrayCoordinateShoot = $this->strategy->shoot();
 
-        return self::translateCoordinatesToString($arrayCoordinateShoot);
+        // On convertit le tableau des coordonnées de tir 
+        $stringCoordinatesShoot = self::translateCoordinatesToString($arrayCoordinateShoot);
+
+        // Ajout du tir dans l'historique
+        $this->shootHistoric->addShootToHistoric([
+            'mode' => $this->mode,
+            'arrayCoordinates' => $arrayCoordinateShoot,
+            'stringCoordinates' => $stringCoordinatesShoot,
+            'orientation' => $this->mode == Constants::getHuntMode() ? null : $this->strategy->getCurrentOrientation(),
+            'direction' => $this->mode == Constants::getHuntMode() ? null : $this->strategy->getCurrentDirection(),
+            'result' => null
+        ]);
+
+        // On ajoute le tir au tableau des cases visitées
+        $this->arrayCellsVisited[] = $arrayCoordinateShoot;
+        
+        // On tir
+        return $stringCoordinatesShoot;
 
     }
 
 
     public function handlingEnemyAnswer(string $answer): void
-    {
+    {   
+        // Mise à jour de la propriété réponse du dernier shoot ajouté dans l'historique 
+        $this->shootHistoric->setPropertyOfLastShootInHistoric('result', $answer);
+
         switch ($answer) {
 
+            // Touché
             case 'hit':
+                
+                // Si on était en mode chasse
                 if ($this->mode === Constants::getHuntMode()) {
-                    $this->setStrategy($this->targetStrategy);
-                } else {
-                    
+                    // On passe en mode cible
+                    $this->mode = Constants::getTargetMode();
                 }
                 break;
 
@@ -114,7 +151,9 @@ class Main
                 break;
 
             case 'sunk':
-                # code...
+                $sunkenShip = $this->determineTheSunkenShip();
+                unset($this->opponentShips[$sunkenShip->name]);
+                $this->mode = Constants::getHuntMode();
                 break;
             
             default:

@@ -16,11 +16,12 @@ class HuntStrategy implements IStrategy
 
     public ProbabilityBoard $probabilityBoard;
 
-    public function __construct(public array $size = [10,10], public array &$ships = [], public array &$arrayCellsVisited = [])
+    public function __construct(public array $size = [10,10], public array &$ships = [], public array &$arrayCellsVisited = [], public SplDoublyLinkedList &$shootHistoric)
     {
         $this->size = $size;
         $this->ships = $ships;
         $this->arrayCellsVisited = $arrayCellsVisited;
+        $this->shootHistoric = $shootHistoric;
     }
 
     public function shoot(): array
@@ -59,10 +60,16 @@ class HuntStrategy implements IStrategy
 
     }
 
-    public function extractCoordinatesCellWithHighestProbability(ProbabilityBoard $board): array
+    public function getCurrentOrientation(): ?string
     {
-        return [0,0];
+        return null;
     }
+
+    public function getCurrentDirection(): ?string
+    {
+        return null;
+    }
+
 
 }
 

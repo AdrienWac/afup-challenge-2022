@@ -12,6 +12,8 @@ interface IStrategy {
 
     public function generateBoard(): ProbabilityBoard;
 
-    public function extractCoordinatesCellWithHighestProbability(ProbabilityBoard $board): array;
+    public function getCurrentOrientation(): ?string;
+
+    public function getCurrentDirection(): ?string;
 
 }
